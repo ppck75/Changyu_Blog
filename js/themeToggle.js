@@ -19,15 +19,10 @@ function getActiveTheme() {
 
 function updateThemeToggleUi(theme) {
   const toggleButton = document.getElementById("theme-toggle-button");
-  const toggleText = document.getElementById("theme-toggle-text");
-  if (!toggleButton || !toggleText) {
+  if (!toggleButton) {
     return;
   }
 
-  const nextLabel =
-    theme === DARK_THEME
-      ? "\uB77C\uC774\uD2B8\uBAA8\uB4DC"
-      : "\uB2E4\uD06C\uBAA8\uB4DC";
   const nextAriaLabel =
     theme === DARK_THEME
       ? "\uB77C\uC774\uD2B8\uBAA8\uB4DC\uB85C \uC804\uD658"
@@ -35,7 +30,7 @@ function updateThemeToggleUi(theme) {
 
   toggleButton.dataset.theme = theme;
   toggleButton.setAttribute("aria-label", nextAriaLabel);
-  toggleText.textContent = nextLabel;
+  toggleButton.title = nextAriaLabel;
 }
 
 function applyTheme(theme) {

@@ -133,6 +133,7 @@ function closeCategoryOverview() {
   overlay.hidden = true;
   document.body.style.overflow = "";
   toggleButton?.classList.remove("is-active");
+  toggleButton?.setAttribute("aria-expanded", "false");
 }
 
 function renderCategoryOverviewList(currentCategory = null) {
@@ -193,6 +194,7 @@ function openCategoryOverview(currentCategory = null) {
   });
   document.body.style.overflow = "hidden";
   toggleButton.classList.add("is-active");
+  toggleButton.setAttribute("aria-expanded", "true");
 }
 
 function initializeCategoryOverviewToggle() {
@@ -423,6 +425,10 @@ function setBlogLayoutMode(mode = "detail") {
   contents?.classList.toggle("is-about-me-view", mode === "about-me");
   sidebar.hidden = isWideMode;
   syncCategoryToggleVisibility(mode);
+  const toolbar = document.getElementById("blog-toolbar");
+  toolbar.hidden = mode === "about-me";
+  document.getElementById("blog-section-title").textContent =
+    siteConfig.homeTitle || siteConfig.blogTitle || "My Personal Blog";
 }
 
 function getFeaturedEntry(entries = getPostEntries(blogList)) {
@@ -452,11 +458,6 @@ function renderHomeHero() {
 
   const heroCard = document.createElement("section");
   heroCard.className = "hero-card";
-
-  const title = document.createElement("h2");
-  title.className = "hero-title";
-  title.textContent = siteConfig.homeTitle || siteConfig.blogTitle || "Data Science Blog";
-  heroCard.appendChild(title);
 
   const introBody = document.createElement("div");
   introBody.className = "hero-intro-body";
@@ -680,6 +681,41 @@ function search(keyword, kinds) {
   renderBlogList(searchResult);
 }
 
+function renderSearchFeaturedPosts() {
+  const section = document.getElementById("search-featured");
+  const list = document.getElementById("search-featured-list");
+  list.replaceChildren();
+  const names = [...new Set(siteConfig.searchFeaturedPosts || [])].filter(Boolean).slice(0, 3);
+  names.forEach((name) => {
+    const post = findPostByName(name);
+    const info = post && extractFileInfo(post.name);
+    if (!info) return;
+    const link = createPostLink(post, info);
+    link.className = "search-featured-link";
+    link.addEventListener("click", (event) => {
+      if (event.defaultPrevented) document.getElementById("mobile-search-dialog").close();
+    });
+    const copy = document.createElement("div");
+    copy.className = "search-featured-copy";
+    const title = document.createElement("h4");
+    title.textContent = info.title;
+    const summary = document.createElement("p");
+    summary.textContent = getPostSummary(info);
+    copy.append(title, summary);
+    link.appendChild(copy);
+    const image = document.createElement("img");
+    image.className = "search-featured-thumbnail";
+    image.src = info.thumbnail;
+    image.alt = "";
+    image.width = 192;
+    image.height = 108;
+    image.addEventListener("error", () => { image.hidden = true; }, { once: true });
+    if (info.thumbnail) link.appendChild(image);
+    list.appendChild(link);
+  });
+  section.hidden = !list.childElementCount;
+}
+
 async function renderMenu() {
   document.getElementById("menu").innerHTML = "";
   initializeCategoryOverviewToggle();
@@ -724,6 +760,7 @@ async function renderMenu() {
       topics.appendChild(button);
     });
     mobileInput.value = document.getElementById("search-input").value;
+    renderSearchFeaturedPosts();
     searchDialog.showModal();
     document.body.classList.add("mobile-search-open");
     mobileInput.focus();
@@ -792,55 +829,42 @@ function createPostLink(post, postInfo) {
   return link;
 }
 
-function createCardElement(fileInfo, index, post) {
-  const isFeatured = index === 0;
+function createCardElement(fileInfo, post) {
   const card = createPostLink(post, fileInfo);
   card.classList.add(
-    ...(isFeatured ? bloglistFirstCardStyle : bloglistCardStyle).split(" ")
+    ...bloglistCardStyle.split(" ")
   );
 
   const img = createThumbnailNode({
     src: fileInfo.thumbnail,
     label: fileInfo.thumbnailName,
     alt: fileInfo.thumbnailName || fileInfo.title,
-    className: isFeatured ? bloglistFirstCardImgStyle : bloglistCardImgStyle,
+    className: bloglistCardImgStyle,
   });
   card.appendChild(img);
 
   const cardBody = document.createElement("div");
   cardBody.classList.add(...bloglistCardBodyStyle.split(" "));
-  if (isFeatured) {
-    cardBody.classList.add("blog-card-featured-body");
-  }
 
   const category = document.createElement("span");
   category.classList.add(...bloglistCardCategoryStyle.split(" "));
-  if (isFeatured) {
-    category.classList.add("blog-card-category-large");
-  }
   category.textContent = fileInfo.category;
   cardBody.appendChild(category);
 
   const title = document.createElement("h2");
   title.classList.add(...bloglistCardTitleStyle.split(" "));
-  if (isFeatured) {
-    title.classList.add("blog-card-featured-title");
-  }
   title.textContent = fileInfo.title;
   cardBody.appendChild(title);
 
   const description = document.createElement("p");
   description.classList.add(
-    ...(isFeatured
-      ? bloglistFirstCardDescriptionStyle
-      : bloglistCardDescriptionStyle
-    ).split(" ")
+    ...bloglistCardDescriptionStyle.split(" ")
   );
   description.textContent = getPostSummary(fileInfo);
   cardBody.appendChild(description);
 
   const metaRow = document.createElement("div");
-  metaRow.className = isFeatured ? "blog-card-featured-meta" : "blog-card-meta";
+  metaRow.className = "blog-card-meta";
 
   const authorDiv = document.createElement("div");
   authorDiv.classList.add(...bloglistCardAuthorDivStyle.split(" "));
@@ -954,7 +978,9 @@ function renderPostByName(postName, shouldPushState = false) {
 }
 
 function renderBlogList(source = null, currentPage = 1) {
-  const pageUnit = 10;
+  const pageUnit = 12;
+  // Keep the home page slice intact; subsequent pages use four rows of cards.
+  const firstPageSize = source === null ? 10 : pageUnit;
   const targetList = source === null ? blogList : source;
   const entries = getPostEntries(targetList);
   const categoryNames = [...new Set(entries.map(({ info }) => info.category))];
@@ -990,25 +1016,25 @@ function renderBlogList(source = null, currentPage = 1) {
     return;
   }
 
-  const totalPage = Math.ceil(targetList.length / pageUnit);
+  const totalPage = 1 + Math.ceil(Math.max(0, targetList.length - firstPageSize) / pageUnit);
   initPagination(totalPage);
   renderPagination(totalPage, currentPage, source);
   document.getElementById("pagination").style.display = totalPage > 1 ? "flex" : "none";
 
-  const startIndex = (currentPage - 1) * pageUnit;
-  const endIndex = currentPage * pageUnit;
+  const startIndex = currentPage === 1 ? 0 : firstPageSize + (currentPage - 2) * pageUnit;
+  const endIndex = currentPage === 1 ? firstPageSize : startIndex + pageUnit;
 
   // Omit only the pinned entry on the home page; keep date-based page boundaries.
   const featuredName = isHome ? getFeaturedEntry(entries)?.post.name : null;
   targetList.slice(startIndex, endIndex)
     .filter((post) => post.name !== featuredName)
-    .forEach((post, index) => {
+    .forEach((post) => {
       const postInfo = extractFileInfo(post.name);
       if (!postInfo) {
         return;
       }
 
-      const cardElement = createCardElement(postInfo, isHome ? index + 1 : index, post);
+      const cardElement = createCardElement(postInfo, post);
       document.getElementById("blog-posts").appendChild(cardElement);
     });
 }
