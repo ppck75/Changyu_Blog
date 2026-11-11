@@ -122,127 +122,6 @@ function sortCategoriesByCount(counts = {}) {
   });
 }
 
-function closeCategoryOverview() {
-  const toggleButton = document.getElementById("category-toggle-button");
-  const overlay = document.getElementById("category-overview-overlay");
-  if (!overlay) {
-    return;
-  }
-
-  overlay.classList.remove("is-open");
-  overlay.hidden = true;
-  document.body.style.overflow = "";
-  toggleButton?.classList.remove("is-active");
-  toggleButton?.setAttribute("aria-expanded", "false");
-}
-
-function renderCategoryOverviewList(currentCategory = null) {
-  const list = document.getElementById("category-overview-list");
-  const totalNode = document.getElementById("category-overview-total");
-  if (!list || !totalNode) {
-    return;
-  }
-
-  const counts = getCategoryCounts();
-  const categories = sortCategoriesByCount(counts);
-  totalNode.textContent = String(blogList.length);
-  list.innerHTML = "";
-
-  const allButton = document.createElement("button");
-  allButton.type = "button";
-  allButton.classList.add(...categoryItemStyle.split(" "));
-  if (!currentCategory) {
-    allButton.classList.add("is-active");
-  }
-  allButton.innerHTML = `<span class="sidebar-category-name">All posts</span><span class="${categoryItemCountStyle}">(${blogList.length})</span>`;
-  allButton.addEventListener("click", () => {
-    closeCategoryOverview();
-    renderBlogList(blogList);
-  });
-  list.appendChild(allButton);
-
-  categories.forEach((category) => {
-    const item = document.createElement("button");
-    item.type = "button";
-    item.classList.add(...categoryItemStyle.split(" "));
-    if (category === currentCategory) {
-      item.classList.add("is-active");
-    }
-    item.innerHTML = `<span class="sidebar-category-name">${category}</span><span class="${categoryItemCountStyle}">(${counts[category]})</span>`;
-    item.addEventListener("click", () => {
-      closeCategoryOverview();
-      search(category, "category");
-    });
-    list.appendChild(item);
-  });
-}
-
-function openCategoryOverview(currentCategory = null) {
-  const toggleButton = document.getElementById("category-toggle-button");
-  const overlay = document.getElementById("category-overview-overlay");
-  if (!overlay || !toggleButton) {
-    return;
-  }
-
-  renderCategoryOverviewList(currentCategory);
-  if (blogList.length === 0 && !isInitData) {
-    initDataBlogList().then(() => renderCategoryOverviewList(currentCategory));
-  }
-  overlay.hidden = false;
-  requestAnimationFrame(() => {
-    overlay.classList.add("is-open");
-  });
-  document.body.style.overflow = "hidden";
-  toggleButton.classList.add("is-active");
-  toggleButton.setAttribute("aria-expanded", "true");
-}
-
-function initializeCategoryOverviewToggle() {
-  const toggleButton = document.getElementById("category-toggle-button");
-  const overlay = document.getElementById("category-overview-overlay");
-  const closeButton = document.getElementById("category-overview-close");
-  if (!toggleButton || !overlay || !closeButton || toggleButton.dataset.bound === "true") {
-    return;
-  }
-
-  toggleButton.addEventListener("click", () => {
-    if (overlay.hidden) {
-      openCategoryOverview();
-      return;
-    }
-    closeCategoryOverview();
-  });
-
-  closeButton.addEventListener("click", closeCategoryOverview);
-
-  overlay.addEventListener("click", (event) => {
-    if (event.target === overlay) {
-      closeCategoryOverview();
-    }
-  });
-
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !overlay.hidden) {
-      closeCategoryOverview();
-    }
-  });
-
-  toggleButton.dataset.bound = "true";
-}
-
-function syncCategoryToggleVisibility(mode = "detail") {
-  const toggleButton = document.getElementById("category-toggle-button");
-  if (!toggleButton) {
-    return;
-  }
-
-  const shouldShow = mode !== "about-me";
-  toggleButton.classList.toggle("is-hidden", !shouldShow);
-  if (!shouldShow) {
-    closeCategoryOverview();
-  }
-}
-
 function countCategoryPosts(category) {
   return getPostEntries().filter(({ info }) => info.category === category).length;
 }
@@ -424,7 +303,6 @@ function setBlogLayoutMode(mode = "detail") {
   shell.classList.toggle("is-post-view", mode === "post");
   contents?.classList.toggle("is-about-me-view", mode === "about-me");
   sidebar.hidden = isWideMode;
-  syncCategoryToggleVisibility(mode);
   const toolbar = document.getElementById("blog-toolbar");
   toolbar.hidden = mode === "about-me";
   document.getElementById("blog-section-title").textContent =
@@ -474,12 +352,17 @@ function renderHomeHero() {
   const updated = document.createElement("p");
   updated.className = "hero-updated";
   const updatedLabel = document.createElement("strong");
-  updatedLabel.textContent = "최근 업데이트 · ";
+  updatedLabel.textContent = "최근 업데이트: ";
   const updatedDate = document.createElement("time");
   const date = latestEntry.info.date;
   updatedDate.dateTime = `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
   updatedDate.textContent = formatDate(date);
-  updated.append(updatedLabel, updatedDate);
+  const updatedGroup = document.createElement("span");
+  updatedGroup.append(updatedLabel, updatedDate);
+  const postCount = document.createElement("span");
+  postCount.className = "hero-post-count";
+  postCount.textContent = `전체 게시글: ${getPostEntries(blogList).length.toLocaleString("ko-KR")}개`;
+  updated.append(updatedGroup, postCount);
   introBody.appendChild(updated);
 
   const summary = document.createElement("p");
@@ -646,7 +529,6 @@ function renderSidebarExtras(context = {}) {
 }
 
 function search(keyword, kinds) {
-  closeCategoryOverview();
   const normalizedKeyword = keyword ? keyword.toLowerCase().trim() : "";
 
   if (blogList.length === 0) {
@@ -718,7 +600,6 @@ function renderSearchFeaturedPosts() {
 
 async function renderMenu() {
   document.getElementById("menu").innerHTML = "";
-  initializeCategoryOverviewToggle();
 
   blogMenu.filter((menu) => !isHiddenMenuItem(menu.name)).forEach((menu) => {
     const link = document.createElement("a");
@@ -1434,7 +1315,6 @@ function renderPagination(totalPage, currentPage, targetList = null) {
 }
 
 async function initialize() {
-  initializeCategoryOverviewToggle();
   await initDataBlogMenu();
   renderMenu();
 

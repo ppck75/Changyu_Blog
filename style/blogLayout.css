@@ -2212,3 +2212,11 @@ body.mobile-search-open { overflow: hidden; }
   .search-featured-copy p { font-size: 0.85rem; }
   .search-featured-list { min-height: 21rem; }
 }
+
+/* Keep the blog search at the right edge, including narrow screens. */
+.blog-toolbar { flex-wrap: nowrap; }
+.blog-toolbar .hero-title { flex: 1 1 auto; min-width: 0; }
+.blog-toolbar-actions { flex: 0 0 auto; margin-left: auto; }
+.blog-toolbar #search-button { width: 2.75rem; padding: 0; }
+.hero-updated { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 1.25rem; }
+.hero-updated > span { white-space: nowrap; }

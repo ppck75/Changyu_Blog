@@ -176,28 +176,6 @@
       </section>
     </dialog>
 
-    <div
-      id="category-overview-overlay"
-      class="category-overview-overlay"
-      hidden
-    >
-      <aside class="category-overview-panel" aria-label="Category overview">
-        <header class="category-overview-head">
-          <h2 class="category-overview-title">
-            전체 주제 (<span id="category-overview-total">0</span>)
-          </h2>
-          <button
-            id="category-overview-close"
-            type="button"
-            class="category-overview-close"
-            aria-label="Close"
-          ></button>
-        </header>
-
-        <div id="category-overview-list" class="category-overview-list"></div>
-      </aside>
-    </div>
-
     <main
       class="site-main container px-4 pb-10 w-full mx-auto max-w-[1240px] md:px-8 md:pt-10"
     >
@@ -205,8 +183,8 @@
         <h2 id="blog-section-title" class="hero-title">My Personal Blog</h2>
         <div class="blog-toolbar-actions">
           <div class="site-search-shell">
-            <button id="search-button" class="flex" type="button" aria-haspopup="dialog" aria-controls="mobile-search-dialog">
-              <span class="blog-search-icon" aria-hidden="true"></span><span>글 검색</span>
+            <button id="search-button" class="flex" type="button" aria-label="글 검색" title="글 검색" aria-haspopup="dialog" aria-controls="mobile-search-dialog">
+              <span class="blog-search-icon" aria-hidden="true"></span>
             </button>
 
             <div
@@ -232,14 +210,6 @@
               </div>
             </div>
           </div>
-          <button
-            id="category-toggle-button"
-            class="category-toggle-button"
-            type="button"
-            aria-label="카테고리 열기" aria-expanded="false" aria-controls="category-overview-overlay"
-          >
-            <span class="category-toggle-icon" aria-hidden="true"></span><span>카테고리</span>
-          </button>
         </div>
       </section>
 
