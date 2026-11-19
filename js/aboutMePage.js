@@ -1,84 +1,37 @@
 let aboutMePageCleanup = null;
 
 function cleanupCustomPageBehaviors() {
-  if (typeof aboutMePageCleanup === "function") {
-    aboutMePageCleanup();
-  }
-
+  if (typeof aboutMePageCleanup === "function") aboutMePageCleanup();
   aboutMePageCleanup = null;
 }
 
 function initializeCustomPageBehaviors(container = document) {
   cleanupCustomPageBehaviors();
-
   const root = container.querySelector("[data-about-me-page]");
-  if (!root) {
-    return;
-  }
+  if (!root) return;
 
-  const navLinks = [...root.querySelectorAll(".am-nav a[href^='#']")];
-  const sections = navLinks
-    .map((link) => root.querySelector(link.getAttribute("href")))
-    .filter(Boolean);
-  const toTopButton = root.querySelector(".am-to-top");
-
-  if (sections.length === 0) {
-    return;
-  }
-
-  const syncActiveSection = () => {
-    const checkpoint = window.scrollY + 180;
-    let activeId = sections[0].id;
-
-    sections.forEach((section) => {
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-      if (sectionTop <= checkpoint) {
-        activeId = section.id;
-      }
+  const buttons = [...root.querySelectorAll("[data-about-language]")];
+  const panels = [...root.querySelectorAll(".language-section[lang]")];
+  const selectLanguage = (language) => {
+    buttons.forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.aboutLanguage === language));
     });
-
-    navLinks.forEach((link) => {
-      link.classList.toggle(
-        "is-current",
-        link.getAttribute("href") === `#${activeId}`
-      );
-    });
+    panels.forEach((panel) => { panel.hidden = panel.lang !== language; });
   };
 
-  const syncTopButton = () => {
-    if (!toTopButton) {
-      return;
-    }
+  let initialLanguage = "ko";
+  try {
+    if (localStorage.getItem("aboutLanguage") === "en") initialLanguage = "en";
+  } catch (error) {}
+  selectLanguage(initialLanguage);
 
-    const revealOffset = root.getBoundingClientRect().top + window.scrollY + 180;
-    toTopButton.classList.toggle("is-visible", window.scrollY > revealOffset);
+  const onLanguageClick = (event) => {
+    const button = event.target.closest("[data-about-language]");
+    if (!button || !root.contains(button)) return;
+    const language = button.dataset.aboutLanguage;
+    selectLanguage(language);
+    try { localStorage.setItem("aboutLanguage", language); } catch (error) {}
   };
-
-  const onScroll = () => {
-    syncActiveSection();
-    syncTopButton();
-  };
-
-  const onTopButtonClick = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
-
-  if (toTopButton) {
-    toTopButton.addEventListener("click", onTopButtonClick);
-  }
-
-  syncActiveSection();
-  syncTopButton();
-
-  aboutMePageCleanup = () => {
-    window.removeEventListener("scroll", onScroll);
-    window.removeEventListener("resize", onScroll);
-
-    if (toTopButton) {
-      toTopButton.removeEventListener("click", onTopButtonClick);
-    }
-  };
+  root.addEventListener("click", onLanguageClick);
+  aboutMePageCleanup = () => root.removeEventListener("click", onLanguageClick);
 }

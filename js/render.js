@@ -305,7 +305,7 @@ function setBlogLayoutMode(mode = "detail") {
   sidebar.hidden = isWideMode;
   const toolbar = document.getElementById("blog-toolbar");
   toolbar.hidden = mode === "about-me";
-  document.getElementById("blog-section-title").textContent =
+  document.getElementById("blog-home-link").textContent =
     siteConfig.homeTitle || siteConfig.blogTitle || "My Personal Blog";
 }
 

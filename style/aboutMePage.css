@@ -88,3 +88,34 @@
     transition: none;
   }
 }
+
+/* About language selection and readable long-form introduction. */
+#contents [data-about-me-page] { max-width: 760px; margin-inline: auto; }
+#contents [data-about-me-page] .about-language-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+#contents [data-about-me-page] .about-language-header h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 1.875rem); line-height: 1.3; font-weight: 600; letter-spacing: -0.035em; }
+#contents [data-about-me-page] .about-language-switch { display: inline-flex; gap: 0.25rem; padding: 0.25rem; border: 1px solid var(--border); border-radius: 6px; }
+#contents [data-about-me-page] .about-language-switch button { min-height: 2.25rem; padding: 0.35rem 0.75rem; border: 0; border-radius: 3px; color: var(--text-subtle); background: transparent; font: inherit; font-size: 0.9rem; cursor: pointer; }
+#contents [data-about-me-page] .about-language-switch button:hover { color: var(--text-main); background: var(--preview-hover-bg); }
+#contents [data-about-me-page] .about-language-switch button[aria-pressed="true"] { color: var(--text-main); background: var(--preview-hover-bg); font-weight: 600; }
+#contents [data-about-me-page] .about-language-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#contents [data-about-me-page] .language-section[hidden] { display: none; }
+#contents [data-about-me-page] .language-section h3 { margin: 2.5rem 0 1rem; font-size: 1.2rem; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em; }
+#contents [data-about-me-page] .language-section p { margin-bottom: 1rem; line-height: 1.85; word-break: normal; overflow-wrap: break-word; }
+#contents [data-about-me-page] .language-section[lang="ko"] p { word-break: keep-all; }
+@media (max-width: 480px) {
+  #contents [data-about-me-page] .about-language-header { align-items: flex-start; gap: 0.75rem; }
+  #contents [data-about-me-page] .about-language-switch button { min-height: 2.75rem; }
+}
+
+#contents [data-about-me-page] .language-section p a {
+  color: var(--accent);
+  font-weight: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+#contents [data-about-me-page] .language-section p a:hover { color: var(--text-main); }
+#contents [data-about-me-page] .language-section p a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

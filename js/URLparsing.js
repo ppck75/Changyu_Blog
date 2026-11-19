@@ -15,26 +15,16 @@ function bindBlogTitleNavigation() {
   blogTitle.innerText = siteConfig.blogTitle || defaultTitle;
   document.title = siteConfig.blogTitle || defaultTitle;
 
-  blogTitle.onclick = () => {
-    if (isLocal) {
-      const mainUrl = new URL(`http://127.0.0.1${url.port ? ":" + url.port : ""}`);
-      window.history.pushState({}, "", mainUrl);
-      renderBlogList();
+  const homeLink = document.getElementById("blog-home-link");
+  homeLink.href = origin;
+  homeLink.onclick = (event) => {
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
       return;
     }
-
-    if (!siteConfig.username || !siteConfig.repositoryName) {
-      const urlConfig = extractFromUrl();
-      siteConfig.username = siteConfig.username || urlConfig.username;
-      siteConfig.repositoryName =
-        siteConfig.repositoryName || urlConfig.repositoryName;
-    }
-
-    const mainUrl = new URL(
-      `https://${siteConfig.username}.github.io/${siteConfig.repositoryName}/`
-    );
-    window.history.pushState({}, "", mainUrl);
+    event.preventDefault();
+    window.history.pushState({}, "", origin);
     renderBlogList();
+    window.scrollTo(0, 0);
   };
 }
 
