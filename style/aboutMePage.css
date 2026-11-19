@@ -169,3 +169,15 @@
   #contents [data-about-me-page] .about-profile-photo { width: 150px; height: 150px; }
   .about-language-switch button { padding-inline: .5rem; }
 }
+
+/* Both translations size the same shared rows, including the section divider. */
+#contents [data-about-me-page] .about-language-panels { display: grid; grid-template-columns: minmax(0, 1fr); }
+#contents [data-about-me-page] .about-language-panels > .language-section { display: grid; grid-template-rows: subgrid; grid-column: 1; grid-row: 1 / span 4; min-width: 0; }
+#contents [data-about-me-page] .about-language-panels .about-profile { align-self: start; }
+#contents [data-about-me-page] .about-language-panels .about-divider { width: 100%; box-sizing: border-box; }
+.is-inactive-language { visibility: hidden; pointer-events: none; }
+
+/* Keep contact links with each translation's final paragraph. */
+#contents [data-about-me-page] .about-language-panels > .language-section { grid-template-rows: subgrid; }
+#contents [data-about-me-page] .about-beyond-body > p { margin-bottom: 0; }
+#contents [data-about-me-page] .about-beyond-body .about-contact-row { margin-top: 0; }

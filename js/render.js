@@ -211,8 +211,8 @@ function createThumbnailNode({ src = "", label = "", alt = "", className = "" })
 
 function getHomeIntro(language = "ko") {
   const introductions = {
-    "ko": "개인 블로그(깃헙 페이지)를 학습과 연구의 과정을 기록하는 리서치 아카이브(Research Archive)로 운영하고 있습니다. 데이터 사이언스와 계산사회과학의 이론 및 방법론을 중심으로, 독학하거나 대학 수업을 통해 배운 내용을 꾸준히 정리해 왔습니다. 또한 관심 있는 학술논문을 읽고 분석하며, 정치·사회·기술에 관한 다양한 질문과 생각을 기록하고 있습니다. 단순히 지식을 축적하는 것을 넘어, 새로운 방법론을 이해하고 이를 실제 연구 문제에 어떻게 적용할 수 있을지 고민하는 과정을 남기고자 합니다.",
-    "en": "I maintain a personal blog hosted on GitHub Pages as a research and learning archive, where I document my academic interests and learning process. My posts primarily focus on data science and computational social science, including theories and methods I have explored through self-study using diverse sources. I also share reviews and reflections on academic papers, along with my thoughts and questions about politics, international relations, society, and technology. Rather than simply collecting knowledge, I use this space to deepen my understanding of research methods and explore how they can be applied to real-world research questions."
+    "ko": "학습과 연구의 과정을 기록하는 리서치 아카이브입니다. 데이터 사이언스와 계산사회과학의 이론 및 방법론을 꾸준히 정리해 왔고, 관심 있는 학술논문을 읽고 분석하며, 정치·사회·기술에 관한 다양한 질문과 생각을 기록하고 있습니다.",
+    "en": "This research archive documents my learning and research process. It brings together my ongoing study of theories and methods in data science and computational social science, analyses of academic papers of interest, and questions and reflections on politics, society, and technology."
 };
   return introductions[language] || introductions.ko;
 }
@@ -375,8 +375,20 @@ function renderHomeHero() {
   languageSwitch.className = "about-language-switch";
   languageSwitch.setAttribute("role", "group");
   languageSwitch.setAttribute("aria-label", "블로그 소개 언어 / Blog introduction language");
+  const introPanels = ["ko", "en"].map(language => {
+    const panel = document.createElement("span");
+    panel.lang = language;
+    panel.textContent = getHomeIntro(language);
+    summary.appendChild(panel);
+    return panel;
+  });
   const selectIntroLanguage = (language) => {
-    summary.textContent = getHomeIntro(language);
+    introPanels.forEach(panel => {
+      const inactive = panel.lang !== language;
+      panel.classList.toggle("is-inactive-language", inactive);
+      panel.inert = inactive;
+      panel.setAttribute("aria-hidden", String(inactive));
+    });
     summary.lang = language;
     languageSwitch.querySelectorAll("button").forEach(button => {
       button.setAttribute("aria-pressed", String(button.lang === language));

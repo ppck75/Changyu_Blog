@@ -16,7 +16,13 @@ function initializeCustomPageBehaviors(container = document) {
     buttons.forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.aboutLanguage === language));
     });
-    panels.forEach((panel) => { panel.hidden = panel.lang !== language; });
+    panels.forEach((panel) => {
+      const inactive = panel.lang !== language;
+      panel.hidden = false;
+      panel.classList.toggle("is-inactive-language", inactive);
+      panel.inert = inactive;
+      panel.setAttribute("aria-hidden", String(inactive));
+    });
   };
 
   let initialLanguage = "ko";
