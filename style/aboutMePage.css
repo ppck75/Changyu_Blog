@@ -14,7 +14,7 @@
 
 #contents [data-about-me-page] p {
   margin: 0 0 0.85rem;
-  font-size: clamp(1rem, 1.3vw, 1.125rem);
+  font-size: 1rem;
   line-height: 1.65;
 }
 
@@ -92,14 +92,14 @@
 /* About language selection and readable long-form introduction. */
 #contents [data-about-me-page] { max-width: 760px; margin-inline: auto; }
 #contents [data-about-me-page] .about-language-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
-#contents [data-about-me-page] .about-language-header h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 1.875rem); line-height: 1.3; font-weight: 600; letter-spacing: -0.035em; }
+#contents [data-about-me-page] .about-language-header h2 { margin: 0; font-size: var(--page-section-title-size); line-height: 1.3; font-weight: 600; letter-spacing: -0.035em; }
 #contents [data-about-me-page] .about-language-switch { display: inline-flex; gap: 0.25rem; padding: 0.25rem; border: 1px solid var(--border); border-radius: 6px; }
 #contents [data-about-me-page] .about-language-switch button { min-height: 2.25rem; padding: 0.35rem 0.75rem; border: 0; border-radius: 3px; color: var(--text-subtle); background: transparent; font: inherit; font-size: 0.9rem; cursor: pointer; }
 #contents [data-about-me-page] .about-language-switch button:hover { color: var(--text-main); background: var(--preview-hover-bg); }
 #contents [data-about-me-page] .about-language-switch button[aria-pressed="true"] { color: var(--text-main); background: var(--preview-hover-bg); font-weight: 600; }
 #contents [data-about-me-page] .about-language-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #contents [data-about-me-page] .language-section[hidden] { display: none; }
-#contents [data-about-me-page] .language-section h3 { margin: 2.5rem 0 1rem; font-size: 1.2rem; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em; }
+#contents [data-about-me-page] .language-section h3 { margin: 2.25rem 0 0.9rem; font-size: 1.0625rem; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em; }
 #contents [data-about-me-page] .language-section p { margin-bottom: 1rem; line-height: 1.85; word-break: normal; overflow-wrap: break-word; }
 #contents [data-about-me-page] .language-section[lang="ko"] p { word-break: keep-all; }
 @media (max-width: 480px) {
@@ -118,4 +118,38 @@
 #contents [data-about-me-page] .language-section p a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+/* The profile is shared by both introduction languages. */
+#contents [data-about-me-page] .about-profile {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-bottom: 2.5rem;
+}
+#contents [data-about-me-page] .about-profile-photo {
+  display: block;
+  flex: 0 0 auto;
+  width: 156px;
+  height: auto;
+  aspect-ratio: 425 / 567;
+  object-fit: contain;
+  border-radius: 5px;
+}
+#contents [data-about-me-page] .about-profile-details { min-width: 0; }
+#contents [data-about-me-page] .about-profile-name {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+}
+#contents [data-about-me-page] .about-profile .about-contact-list { margin-top: 0.9rem; gap: 0.5rem 1rem; }
+#contents [data-about-me-page] .about-profile .about-contact-link { font-size: 0.9375rem; }
+#contents [data-about-me-page] .about-introduction { padding-bottom: 0; border-bottom: 0; }
+@media (max-width: 600px) {
+  #contents [data-about-me-page] .about-profile { flex-direction: column; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; }
+  #contents [data-about-me-page] .about-profile-photo { width: 128px; }
+  #contents [data-about-me-page] .about-profile-name { font-size: 1.25rem; }
+  #contents [data-about-me-page] .language-section p { font-size: 0.9375rem; }
 }
