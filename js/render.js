@@ -209,11 +209,12 @@ function createThumbnailNode({ src = "", label = "", alt = "", className = "" })
   return image;
 }
 
-function getHomeIntro() {
-  const categories = getTopCategories(4).map(([category]) => category).join(", ");
-  return `머신러닝, 딥러닝, 데이터 분석 학습 기록을 축적하는 개인 아카이브입니다. ${
-    categories ? `최근에는 ${categories} 주제를 중심으로 정리하고 있습니다.` : ""
-  }`;
+function getHomeIntro(language = "ko") {
+  const introductions = {
+    "ko": "개인 블로그(깃헙 페이지)를 학습과 연구의 과정을 기록하는 리서치 아카이브(Research Archive)로 운영하고 있습니다. 데이터 사이언스와 계산사회과학의 이론 및 방법론을 중심으로, 독학하거나 대학 수업을 통해 배운 내용을 꾸준히 정리해 왔습니다. 또한 관심 있는 학술논문을 읽고 분석하며, 정치·사회·기술에 관한 다양한 질문과 생각을 기록하고 있습니다. 단순히 지식을 축적하는 것을 넘어, 새로운 방법론을 이해하고 이를 실제 연구 문제에 어떻게 적용할 수 있을지 고민하는 과정을 남기고자 합니다.",
+    "en": "I maintain a personal blog hosted on GitHub Pages as a research and learning archive, where I document my academic interests and learning process. My posts primarily focus on data science and computational social science, including theories and methods I have explored through self-study using diverse sources. I also share reviews and reflections on academic papers, along with my thoughts and questions about politics, international relations, society, and technology. Rather than simply collecting knowledge, I use this space to deepen my understanding of research methods and explore how they can be applied to real-world research questions."
+};
+  return introductions[language] || introductions.ko;
 }
 
 function createHeroChip(text) {
@@ -349,10 +350,10 @@ function renderHomeHero() {
   introImage.height = 1024;
   introBody.appendChild(introImage);
 
-  const updated = document.createElement("p");
+  const updated = document.createElement("div");
   updated.className = "hero-updated";
   const updatedLabel = document.createElement("strong");
-  updatedLabel.textContent = "최근 업데이트: ";
+  updatedLabel.textContent = "Updated: ";
   const updatedDate = document.createElement("time");
   const date = latestEntry.info.date;
   updatedDate.dateTime = `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
@@ -361,13 +362,40 @@ function renderHomeHero() {
   updatedGroup.append(updatedLabel, updatedDate);
   const postCount = document.createElement("span");
   postCount.className = "hero-post-count";
-  postCount.textContent = `전체 게시글: ${getPostEntries(blogList).length.toLocaleString("ko-KR")}개`;
+  postCount.textContent = `Total posts: ${getPostEntries(blogList).length.toLocaleString("en-US")}`;
   updated.append(updatedGroup, postCount);
   introBody.appendChild(updated);
 
   const summary = document.createElement("p");
   summary.className = "hero-summary";
-  summary.textContent = getHomeIntro();
+  summary.id = "home-introduction";
+  let introLanguage = "ko";
+  try { if (localStorage.getItem("blogIntroLanguage") === "en") introLanguage = "en"; } catch (error) {}
+  const languageSwitch = document.createElement("div");
+  languageSwitch.className = "about-language-switch";
+  languageSwitch.setAttribute("role", "group");
+  languageSwitch.setAttribute("aria-label", "블로그 소개 언어 / Blog introduction language");
+  const selectIntroLanguage = (language) => {
+    summary.textContent = getHomeIntro(language);
+    summary.lang = language;
+    languageSwitch.querySelectorAll("button").forEach(button => {
+      button.setAttribute("aria-pressed", String(button.lang === language));
+    });
+  };
+  [["ko", "한국어"], ["en", "English"]].forEach(([language, label]) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.lang = language;
+    button.textContent = label;
+    button.setAttribute("aria-controls", summary.id);
+    button.addEventListener("click", () => {
+      selectIntroLanguage(language);
+      try { localStorage.setItem("blogIntroLanguage", language); } catch (error) {}
+    });
+    languageSwitch.appendChild(button);
+  });
+  updated.appendChild(languageSwitch);
+  selectIntroLanguage(introLanguage);
   introBody.appendChild(summary);
 
   const categoryList = document.createElement("div");

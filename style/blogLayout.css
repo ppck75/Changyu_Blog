@@ -2226,3 +2226,12 @@ body.mobile-search-open { overflow: hidden; }
 #blog-home-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
 
 .blog-toolbar .hero-title { font-size: var(--page-section-title-size); }
+
+/* Equal free space between the metadata and introduction language selector. */
+.hero-updated { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; column-gap: .75rem; row-gap: .75rem; font-size: .8125rem; }
+.hero-updated .about-language-switch { flex-shrink: 0; }
+.hero-updated .about-language-switch button { font-size: .8125rem; padding-inline: .5rem; }
+.hero-card .hero-summary { white-space: normal; }
+@media (max-width: 380px) {
+  .hero-updated .about-language-switch { margin-left: auto; }
+}
