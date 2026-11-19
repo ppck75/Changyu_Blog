@@ -158,15 +158,15 @@
 #contents [data-about-me-page] { max-width: 920px; }
 #contents [data-about-me-page] .about-language-header { flex-wrap: nowrap; }
 #contents [data-about-me-page] .about-profile { align-items: flex-start; gap: 2rem; margin-bottom: 0; }
-#contents [data-about-me-page] .about-profile-photo { width: 180px; height: 180px; aspect-ratio: 1; object-fit: cover; object-position: center 25%; border-radius: 50%; }
-#contents [data-about-me-page] .about-profile p { flex: 1; margin: 0; }
+#contents [data-about-me-page] .about-profile-photo { width: 210px; height: auto; aspect-ratio: 425 / 567; object-fit: contain; border-radius: 0; }
+#contents [data-about-me-page] .about-profile p { flex: 1; min-width: 0; margin: 0; }
 #contents [data-about-me-page] .about-divider { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
 #contents [data-about-me-page] .language-section h3 { margin-top: 0; }
 #contents [data-about-me-page] .about-contact-row { display: flex; align-items: baseline; gap: .65rem; margin-top: 1.25rem; }
 #contents [data-about-me-page] .about-contact-list { margin: 0; }
 @media (max-width: 600px) {
   #contents [data-about-me-page] .about-profile { gap: 1.25rem; }
-  #contents [data-about-me-page] .about-profile-photo { width: 150px; height: 150px; }
+  #contents [data-about-me-page] .about-profile-photo { width: 150px; height: auto; }
   .about-language-switch button { padding-inline: .5rem; }
 }
 

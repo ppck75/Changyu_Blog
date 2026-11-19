@@ -31,6 +31,35 @@ function initializeCustomPageBehaviors(container = document) {
   } catch (error) {}
   selectLanguage(initialLanguage);
 
+  const englishProfile = root.querySelector('#about-language-en .about-profile');
+  const englishText = englishProfile?.querySelector('p');
+  const photos = [...root.querySelectorAll('.about-profile-photo')];
+  const fitPortrait = () => {
+    if (!englishText) return;
+    if (window.matchMedia('(max-width: 600px)').matches) {
+      photos.forEach(photo => { photo.style.width = ''; });
+      return;
+    }
+    // Text wraps as the portrait width changes, so settle both dimensions together.
+    let width = 156;
+    for (let pass = 0; pass < 12; pass++) {
+      photos.forEach(photo => { photo.style.width = `${width}px`; });
+      const next = englishText.getBoundingClientRect().height * 425 / 567;
+      if (Math.abs(next - width) < 0.5) break;
+      width = next;
+    }
+  };
+  let previousWidth = 0;
+  const observer = new ResizeObserver(() => {
+    const width = root.getBoundingClientRect().width;
+    if (width === previousWidth) return;
+    previousWidth = width;
+    fitPortrait();
+  });
+  observer.observe(root);
+  document.fonts.ready.then(() => { if (root.isConnected) fitPortrait(); });
+  fitPortrait();
+
   const onLanguageClick = (event) => {
     const button = event.target.closest("[data-about-language]");
     if (!button || !root.contains(button)) return;
@@ -39,5 +68,8 @@ function initializeCustomPageBehaviors(container = document) {
     try { localStorage.setItem("aboutLanguage", language); } catch (error) {}
   };
   root.addEventListener("click", onLanguageClick);
-  aboutMePageCleanup = () => root.removeEventListener("click", onLanguageClick);
+  aboutMePageCleanup = () => {
+    root.removeEventListener("click", onLanguageClick);
+    observer.disconnect();
+  };
 }
