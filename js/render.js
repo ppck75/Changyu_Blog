@@ -900,8 +900,8 @@ function renderPostByName(postName, shouldPushState = false) {
 
 function renderBlogList(source = null, currentPage = 1) {
   const pageUnit = 12;
-  // Keep the home page slice intact; subsequent pages use four rows of cards.
-  const firstPageSize = source === null ? 10 : pageUnit;
+  // Home shows three rows; subsequent pages and filtered results show four.
+  const firstPageSize = source === null ? 9 : pageUnit;
   const targetList = source === null ? blogList : source;
   const entries = getPostEntries(targetList);
   const categoryNames = [...new Set(entries.map(({ info }) => info.category))];
@@ -945,10 +945,8 @@ function renderBlogList(source = null, currentPage = 1) {
   const startIndex = currentPage === 1 ? 0 : firstPageSize + (currentPage - 2) * pageUnit;
   const endIndex = currentPage === 1 ? firstPageSize : startIndex + pageUnit;
 
-  // Omit only the pinned entry on the home page; keep date-based page boundaries.
-  const featuredName = isHome ? getFeaturedEntry(entries)?.post.name : null;
+  // The featured hero is independent of the complete chronological card list.
   targetList.slice(startIndex, endIndex)
-    .filter((post) => post.name !== featuredName)
     .forEach((post) => {
       const postInfo = extractFileInfo(post.name);
       if (!postInfo) {
