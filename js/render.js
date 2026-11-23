@@ -1336,11 +1336,16 @@ function renderPagination(totalPage, currentPage, targetList = null) {
   prevButton.disabled = currentPage === 1;
   nextButton.disabled = currentPage === totalPage;
 
+  const goToPage = (page) => {
+    renderBlogList(targetList, page);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  };
+
   prevButton.onclick = () => {
-    renderBlogList(targetList, currentPage - 1);
+    goToPage(currentPage - 1);
   };
   nextButton.onclick = () => {
-    renderBlogList(targetList, currentPage + 1);
+    goToPage(currentPage + 1);
   };
 
   const labels = getPaginationLabels(totalPage, currentPage);
@@ -1356,7 +1361,7 @@ function renderPagination(totalPage, currentPage, targetList = null) {
 
     page.disabled = false;
     page.onclick = () => {
-      renderBlogList(targetList, label);
+      goToPage(label);
     };
   });
 }
