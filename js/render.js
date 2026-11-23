@@ -310,9 +310,17 @@ function setBlogLayoutMode(mode = "detail") {
     siteConfig.homeTitle || siteConfig.blogTitle || "My Personal Blog";
 }
 
+function resolveFeaturedEntry(reference, entries = getPostEntries(blogList)) {
+  const value = (reference || "").trim();
+  if (!value) return null;
+  const title = extractFileInfo(value)?.title || value;
+  return entries.find(({ post }) => post.name === value)
+    || entries.find(({ info }) => info.title === title)
+    || null;
+}
+
 function getFeaturedEntry(entries = getPostEntries(blogList)) {
-  const filename = (siteConfig.featuredPost || "").trim();
-  return entries.find(({ post }) => post.name === filename) || entries[0] || null;
+  return resolveFeaturedEntry(siteConfig.featuredPost, entries) || entries[0] || null;
 }
 
 function renderHomeHero() {
@@ -609,8 +617,9 @@ function renderSearchFeaturedPosts() {
   list.replaceChildren();
   const names = [...new Set(siteConfig.searchFeaturedPosts || [])].filter(Boolean).slice(0, 3);
   names.forEach((name) => {
-    const post = findPostByName(name);
-    const info = post && extractFileInfo(post.name);
+    const entry = resolveFeaturedEntry(name);
+    const post = entry?.post;
+    const info = entry?.info;
     if (!info) return;
     const link = createPostLink(post, info);
     link.className = "search-featured-link";

@@ -7,12 +7,12 @@ const siteConfig = {
   textColor: "#333333", // 기본 텍스트 색상
   blogTitle: "Changyu Park", // 블로그 제목
   homeTitle: "My Personal Blog", // 홈 소개 영역의 제목
-  // 대표 글: blog 폴더의 파일명 전체를 확장자까지 복사하세요 (blog/ 경로 제외).
+  // 대표 글: 날짜 변경에도 유지되도록 글 제목을 지정하세요. 전체 파일명도 지원합니다.
   // 비워 두거나 목록에 없는 파일을 지정하면 최신 글을 표시합니다.
-  featuredPost: "[20260801]_[인문사회연구자를 위한 XAI_SHAP_종합정리]_[XAI]_[XAI3.png]_[계산사회과학]_[].md",
-  // 검색창 대표 글: 최대 3개. 빈 자리에 글 파일명을 추가하세요.
+  featuredPost: "인문사회연구자를 위한 XAI_SHAP_종합정리",
+  // 검색창 대표 글: 최대 3개. 빈 자리에 글 제목을 추가하세요.
   searchFeaturedPosts: [
-    "[20260801]_[인문사회연구자를 위한 XAI_SHAP_종합정리]_[XAI]_[XAI3.png]_[계산사회과학]_[].md",
+    "인문사회연구자를 위한 XAI_SHAP_종합정리",
     "",
     "",
   ],
