@@ -2246,8 +2246,8 @@ body.mobile-search-open { overflow: hidden; }
 .home-topics { margin-top: .75rem; padding-block: .75rem; }
 .home-topics .home-section-title { margin-bottom: .75rem; }
 
-/* Place the pinned article on the left of the desktop home introduction. */
+/* Keep the introduction on the left and the pinned article on the right. */
 @media (min-width: 1025px) {
-  .home-hero-shell .hero-panel { grid-column: 1; }
-  .home-hero-shell .hero-card { grid-column: 2; }
+  .home-hero-shell .hero-card { grid-column: 1; }
+  .home-hero-shell .hero-panel { grid-column: 2; }
 }
