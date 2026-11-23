@@ -211,8 +211,8 @@ function createThumbnailNode({ src = "", label = "", alt = "", className = "" })
 
 function getHomeIntro(language = "ko") {
   const introductions = {
-    "ko": "학습과 연구의 과정을 기록하는 리서치 아카이브입니다. 데이터 사이언스와 계산사회과학의 이론 및 방법론을 꾸준히 정리해 왔고, 관심 있는 학술논문을 읽고 분석하며, 정치·사회·기술에 관한 다양한 질문과 생각을 기록하고 있습니다.",
-    "en": "This research archive documents my learning and research process. It brings together my ongoing study of theories and methods in data science and computational social science, analyses of academic papers of interest, and questions and reflections on politics, society, and technology."
+    "ko": "학습과 연구의 과정을 기록하는 리서치 아카이브입니다. 최근에는 정치·국제관계·사회·기술에 관한 다양한 질문과 생각을 기록하고 있습니다. 또한, 데이터 사이언스와 계산사회과학의 이론 및 방법론, 관심 있는 학술논문을 꾸준히 기록해 왔습니다.",
+    "en": "This research archive documents my learning and research process. Recent entries explore questions and reflections on politics, international relations, society, and technology. I have also consistently documented theories and methods in data science and computational social science, along with academic papers of interest."
 };
   return introductions[language] || introductions.ko;
 }
