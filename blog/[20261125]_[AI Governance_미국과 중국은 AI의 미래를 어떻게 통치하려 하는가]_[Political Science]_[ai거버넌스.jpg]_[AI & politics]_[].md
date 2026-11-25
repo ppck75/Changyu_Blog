@@ -73,7 +73,7 @@ AI 거버넌스를 정확히 이해하기 위해서는 AI 정책(AI Policy)과 A
 
 다음은 *AI For Leaders*에서 제시한 두 개념의 비교 자료다. 핀터레스트에서 두 개념을 잘 비교한 post가 있어서 인용해 보았다. 
 
-![AI Policy와 AI Governance 비교](ai거버넌스.jpg)
+![AI Policy와 AI Governance 비교](C:\Users\82109\Desktop\Data_Science\img\ai거버넌스.jpg)
 
 *출처: AI For Leaders, [AI Policy is Not AI Governance — Instagram](https://www.instagram.com/p/DanC9G0iMQv/).*
 
